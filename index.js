@@ -16,6 +16,7 @@ async function run() {
     printQRInTerminal: true,
     logger,
   });
+  
 async function stopAndLogout() {
     // Menghentikan logger (misalnya dengan menghentikan pengaturan interval, dll.)
     logger.stop(); // Anda perlu mengganti ini sesuai dengan implementasi logger Anda
