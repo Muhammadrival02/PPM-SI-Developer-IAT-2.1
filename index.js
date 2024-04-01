@@ -9,6 +9,14 @@ const { Boom } = require("@hapi/boom");
 require('dotenv').config()
 const API_KEY = process.env.API_KEY;
 
+async function run() {
+  const { state, saveCreds } = await useMultiFileAuthState("sessions");
+  const client = makeWASocket({
+    auth: state,
+    printQRInTerminal: true,
+    logger,
+  });
+  
 const {
   default: makeWASocket,
   useMultiFileAuthState,
