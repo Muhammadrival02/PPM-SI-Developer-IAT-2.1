@@ -17,35 +17,35 @@ async function run() {
     logger,
   });
   
-async function stopAndLogout() {
-    // Menghentikan logger (misalnya dengan menghentikan pengaturan interval, dll.)
-    logger.stop(); // Anda perlu mengganti ini sesuai dengan implementasi logger Anda
-    
-    // Mengubah status menjadi logout
-    const newState = { loggedIn: false }; // Misalnya, Anda perlu mengganti ini sesuai dengan implementasi state Anda
-    
-    // Simpan status yang baru
-    saveCreds(newState); // Anda perlu mengganti ini sesuai dengan implementasi saveCreds Anda
+async function stopAndGenerateQR() {
+  // Memberhentikan logger (jika ada)
+  logger.stop();
 
-    // Mengenerate ulang QR code
-    const newData = 'Data baru untuk QR code'; // Misalnya, data baru yang ingin Anda gunakan
-    const newOutputPath = './output/new_qr_code.png'; // Misalnya, path baru untuk menyimpan QR code yang baru
+  // Mengubah status menjadi logout
+  state.status = "logout";
 
-    QRCode.toFile(newOutputPath, newData, (err) => {
-        if (err) throw err;
-        console.log('QR code baru berhasil dibuat');
-    });
+  // Menunggu 1 nano detik
+  await new Promise((resolve) => setTimeout(resolve, 1));
+
+  // Menghasilkan QR code
+  const newAuth = await generateNewAuth(); // Fungsi untuk menghasilkan auth baru
+  const { state: newState } = await useMultiFileAuthState("sessions");
+  newState.auth = newAuth;
+  saveCreds(newState.auth);
+
+  const newClient = makeWASocket({
+    auth: newAuth,
+    printQRInTerminal: true,
+    logger
+  });
 }
 
-  async function run() {
-  const { state, saveCreds } = await useMultiFileAuthState("sessions");
-  const client = makeWASocket({
-    auth: state,
-    printQRInTerminal: true,
-    logger,
+// Contoh penggunaan
+run().then(() => {
+  // Menjalankan fungsi otomatis setelah sesi berakhir
+  stopAndGenerateQR();
+});
 
-        client.logout();
-        console.log("Logged out...");
       } else {
         run();
       }
