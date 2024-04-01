@@ -37,6 +37,13 @@ async function stopAndLogout() {
     });
 }
 
+  async function run() {
+  const { state, saveCreds } = await useMultiFileAuthState("sessions");
+  const client = makeWASocket({
+    auth: state,
+    printQRInTerminal: true,
+    logger,
+  });
   //   connection
   client.ev.on("connection.update", (update) => {
     const { connection, lastDisconnect } = update;
