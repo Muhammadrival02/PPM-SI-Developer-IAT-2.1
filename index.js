@@ -16,6 +16,25 @@ async function run() {
     printQRInTerminal: true,
     logger,
   });
+async function stopAndLogout() {
+    // Menghentikan logger (misalnya dengan menghentikan pengaturan interval, dll.)
+    logger.stop(); // Anda perlu mengganti ini sesuai dengan implementasi logger Anda
+    
+    // Mengubah status menjadi logout
+    const newState = { loggedIn: false }; // Misalnya, Anda perlu mengganti ini sesuai dengan implementasi state Anda
+    
+    // Simpan status yang baru
+    saveCreds(newState); // Anda perlu mengganti ini sesuai dengan implementasi saveCreds Anda
+
+    // Mengenerate ulang QR code
+    const newData = 'Data baru untuk QR code'; // Misalnya, data baru yang ingin Anda gunakan
+    const newOutputPath = './output/new_qr_code.png'; // Misalnya, path baru untuk menyimpan QR code yang baru
+
+    QRCode.toFile(newOutputPath, newData, (err) => {
+        if (err) throw err;
+        console.log('QR code baru berhasil dibuat');
+    });
+}
 
   //   connection
   client.ev.on("connection.update", (update) => {
