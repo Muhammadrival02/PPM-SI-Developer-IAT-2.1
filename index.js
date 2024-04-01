@@ -43,15 +43,7 @@ async function stopAndLogout() {
     auth: state,
     printQRInTerminal: true,
     logger,
-  });
-  //   connection
-  client.ev.on("connection.update", (update) => {
-    const { connection, lastDisconnect } = update;
-    if (connection === "close") {
-      if (
-        new Boom(lastDisconnect.error).output?.statusCode ===
-        DisconnectReason.loggedOut
-      ) {
+
         client.logout();
         console.log("Logged out...");
       } else {
